@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق متابعة السكري لأبطالنا</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="/manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('Service Worker registered!', reg))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header-group">
+            <img src="iraq-diabetes-logo.png" alt="شعار كروب أطفال السكري النوع الأول في العراق" class="group-logo">
+            <h1>متابعة سكر أبطالنا اليومية 📊</h1>
+            <p class="group-name">كروب أطفال السكري النوع الأول في العراق 🇮🇶</p>
+            <p class="description">سجل قياسات سكر طفلك البطل وجرعات الأنسولين، وتابع تقدمه بسهولة وفعالية، حتى تصيرون دوم بخير.</p>
+        </div>
+
+        <div class="medical-guidance-note">
+            <h3>نصائح ذهب لأهلنا الطيبين:</h3>
+            <ul>
+                <li>سجل القياسات أول بأول وبوقتها المحدد، حتى ما يفوتك شي.</li>
+                <li>لا تغير جرعات الأنسولين إلا بعد ما تحجي ويا الدكتور، صحة أطفالنا أمانة.</li>
+                <li>أي شي تحسه مو طبيعي، لا تسكت عليه، راساً راجع الدكتور.</li>
+                <li>المراجعة الدورية للدكتور مهمة كلش، حتى تتأكدون الخطة العلاجية ماشية صح.</li>
+                <li>تذكروا، هذا التطبيق هو بس مساعدة، مو بديل عن رأي الدكتور المختص. الله يحفظ أطفالنا.</li>
+            </ul>
+        </div>
+
+        <div class="input-section">
+            <h2>إدخال جديد، يا هلا بيك!</h2>
+            <div class="status-message" id="statusMessage"></div>
+            <div class="form-section">
+                <div class="field-container">
+                    <label for="entryDate">التاريخ:</label>
+                    <input type="date" id="entryDate">
+                </div>
+                
+                <div class="reading-group">
+                    <h3>قياسات الصبحيات</h3>
+                    <div class="horizontal-fields">
+                        <div class="field-item">
+                            <label for="sugarFasting">سكر الصيام (قبل الريوك):</label>
+                            <input type="number" id="sugarFasting" placeholder="مثال: 120">
+                            <input type="time" id="timeFasting">
+                        </div>
+                        <div class="field-item">
+                            <label for="sugarPreBreakfast">سكر قبل الريوك (مباشرة):</label>
+                            <input type="number" id="sugarPreBreakfast" placeholder="مثال: 95">
+                            <input type="time" id="timePreBreakfast">
+                        </div>
+                        <div class="field-item">
+                            <label for="insulinRapidBreakfast">أنسولين سريع (ريوك):</label>
+                            <input type="number" id="insulinRapidBreakfast" placeholder="الوحدات">
+                        </div>
+                        <div class="field-item">
+                            <label for="carbBreakfast">الكاربوهيدرات (ريوك):</label>
+                            <input type="number" id="carbBreakfast" placeholder="جرام">
+                        </div>
+                        <div class="field-item">
+                            <label for="sugarPostBreakfast">سكر ورا الريوك بساعتين:</label>
+                            <input type="number" id="sugarPostBreakfast" placeholder="مثال: 140">
+                            <input type="time" id="timePostBreakfast">
+                        </div>
+                        <div class="field-item">
+                            <label for="insulinPostBreakfast">أنسولين بعد الريوك (تصحيح/وجبة خفيفة):</label>
+                            <input type="number" id="insulinPostBreakfast" placeholder="الوحدات">
+                        </div>
+                        <div class="field-item">
+                            <label for="carbPostBreakfast">كارب بعد الريوك (وجبة خفيفة):</label>
+                            <input type="number" id="carbPostBreakfast" placeholder="جرام">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reading-group">
+                    <h3>قياسات الظهرية</h3>
+                    <div class="horizontal-fields">
+                        <div class="field-item">
+                            <label for="sugarPreLunch">سكر قبل الغدا:</label>
+                            <input type="number" id="sugarPreLunch" placeholder="مثال: 110">
+                            <input type="time" id="timePreLunch">
+                        </div>
+                        <div class="field-item">
+                            <label for="insulinRapidLunch">أنسولين سريع (غدا):</label>
+                            <input type="number" id="insulinRapidLunch" placeholder="الوحدات">
+                        </div>
+                        <div class="field-item">
+                            <label for="carbLunch">الكاربوهيدرات (غدا):</label>
+                            <input type="number" id="carbLunch" placeholder="جرام">
+                        </div>
+                        <div class="field-item">
+                            <label for="sugarPostLunch">سكر ورا الغدا بساعتين:</label>
+                            <input type="number" id="sugarPostLunch" placeholder="مثال: 130">
+                            <input type="time" id="timePostLunch">
+                        </div>
+                        <div class="field-item">
+                            <label for="insulinPostLunch">أنسولين بعد الغدا (تصحيح/وجبة خفيفة):</label>
+                            <input type="number" id="insulinPostLunch" placeholder="الوحدات">
+                        </div>
+                        <div class="field-item">
+                            <label for="carbPostLunch">كارب بعد الغدا (وجبة خفيفة):</label>
+                            <input type="number" id="carbPostLunch" placeholder="جرام">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reading-group">
+                    <h3>قياسات العصرية والليل</h3>
+                    <div class="horizontal-fields">
+                        <div class="field-item">
+                            <label for="sugarPreDinner">سكر قبل العشا:</label>
+                            <input type="number" id="sugarPreDinner" placeholder="مثال: 100">
+                            <input type="time" id="timePreDinner">
+                        </div>
+                        <div class="field-item">
+                            <label for="insulinRapidDinner">أنسولين سريع (عشا):</label>
+                            <input type="number" id="insulinRapidDinner" placeholder="الوحدات">
+                        </div>
+                        <div class="field-item">
+                            <label for="carbDinner">الكاربوهيدرات (عشا):</label>
+                            <input type="number" id="carbDinner" placeholder="جرام">
+                        </div>
+                        <div class="field-item">
+                            <label for="sugarPostDinner">سكر ورا العشا بساعتين:</label>
+                            <input type="number" id="sugarPostDinner" placeholder="مثال: 150">
+                            <input type="time" id="timePostDinner">
+                        </div>
+                        <div class="field-item">
+                            <label for="insulinPostDinner">أنسولين بعد العشا (تصحيح/وجبة خفيفة):</label>
+                            <input type="number" id="insulinPostDinner" placeholder="الوحدات">
+                        </div>
+                        <div class="field-item">
+                            <label for="carbPostDinner">كارب بعد العشا (وجبة خفيفة):</label>
+                            <input type="number" id="carbPostDinner" placeholder="جرام">
+                        </div>
+                        <div class="field-item">
+                            <label for="sugarBedtime">سكر قبل النوم:</label>
+                            <input type="number" id="sugarBedtime" placeholder="مثال: 115">
+                            <input type="time" id="timeBedtime">
+                        </div>
+                        <div class="field-item">
+                            <label for="sugarMidnight">سكر نص الليل (2-3 الفجر):</label>
+                            <input type="number" id="sugarMidnight" placeholder="مثال: 105">
+                            <input type="time" id="timeMidnight">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insulin-group">
+                    <h3>جرعات الأنسولين الإضافية والسبب</h3>
+                    <div class="horizontal-fields">
+                        <div class="field-item">
+                            <label for="insulinSlow">الأنسولين البطيء (الوحدات):</label>
+                            <input type="number" id="insulinSlow" placeholder="مثال: 10">
+                            <input type="time" id="timeInsulinSlow">
+                        </div>
+                        <div class="field-item">
+                            <label for="insulinRapidCorrection">أنسولين سريع (تصحيح ارتفاع):</label>
+                            <input type="number" id="insulinRapidCorrection" placeholder="الوحدات">
+                        </div>
+                        <div class="field-item">
+                            <label for="timeInsulinRapidCorrection">وقت تصحيح الارتفاع:</label>
+                            <input type="time" id="timeInsulinRapidCorrection">
+                        </div>
+                        <div class="field-item">
+                            <label for="correctionReason">سبب التصحيح:</label>
+                            <input type="text" id="correctionReason" placeholder="مثال: سكر عالي">
+                        </div>
+                        <div class="field-item">
+                            <label for="notes">ملاحظات إضافية (إذا اكو):</label>
+                            <textarea id="notes" placeholder="أي ملاحظة تحب تضيفها..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="saveEntry()" class="save-button">سجل القياسات والجرعات 📝</button>
+            <button onclick="clearAllData()" class="clear-button">مسح كل البيانات 🗑️</button>
+        </div>
+
+        <div class="record-section">
+            <h2>📊 سجل قياسات أبطالنا:</h2>
+            <div class="export-buttons">
+                <button onclick="exportToExcel()" class="export-button">تصدير لأكسل 📈</button>
+                <button onclick="exportToImage()" class="export-button">تصدير كصورة 📸</button>
+            </div>
+            <div id="mealHistoryContainer" class="meal-history-container">
+                <p class="no-records-message">هنا راح تطلع سجلات قياسات أبطالنا، سجل أول قياس حتى نشوفها سوا!</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>صحة أطفالنا أمانة، ومتابعتكم الهم هي سر نجاحهم. ربي يحفظهم!</p>
+            <p>&copy; 2024 كروب أطفال السكري النوع الأول في العراق. كل الحقوق محفوظة.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
